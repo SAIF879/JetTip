@@ -134,8 +134,8 @@ fun generateText(
 @Composable
 fun DefaultPreview() {
     JetTipTheme {
-       MyApp {
-           Text(text = "hello world")
-       }
+        MyApp {
+            Text(text = "hello world")
+        }
     }
 }
