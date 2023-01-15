@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 
       val amount by remember {
-          mutableStateOf(0)
+          mutableStateOf(0.0)
       }
 
 MyApp {
@@ -126,10 +126,6 @@ fun generateText(
 ){
     Text(text = content , fontWeight =fontWeight, color =color,fontSize = fontSize)
 }
-
-
-
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
