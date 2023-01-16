@@ -1,43 +1,54 @@
 package com.example.jettip
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.jettip.components.generateInputField
 import com.example.jettip.ui.theme.JetTipTheme
-import com.example.jettip.ui.theme.Shapes
-import com.example.jettip.ui.theme.Typography
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("SuspiciousIndentation")
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+      val mContext = LocalContext.current
       val amount by remember {
           mutableStateOf(0.0)
       }
+            val totalbillState = remember {
+                mutableStateOf("0")
+            }
+
+            val validState = remember(totalbillState.value) {
+                totalbillState.value.trim().isNotEmpty()
+            }
+            val keyBoardController = LocalSoftwareKeyboardController.current
 
 MyApp {
-
     generateBox(
         color = colorResource(id = R.color.purple_200),
         height =150,
@@ -59,10 +70,22 @@ MyApp {
         borderWidth = 3,
         borderColor = Color.Black,
         shape = RectangleShape) {
-        Text(text = "hello world", fontSize = 32.sp, fontWeight = FontWeight.Bold)
+        generateInputField(
+            mainString = totalbillState,
+            isEnabled =true ,
+            padding =10 ,
+            isSingleLine =true ,
+            isReadOnly =false ,
+            context = mContext,
+            onAction = KeyboardActions{
+            if (!validState)return@KeyboardActions
+                keyBoardController?.hide()
+
+            }
+        ) {
+            Text(text = "box")
+        }
     }
-
-
 }
         }
     }
