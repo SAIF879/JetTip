@@ -2,6 +2,7 @@ package com.example.jettip
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -35,18 +36,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-      val mContext = LocalContext.current
+
       val amount by remember {
           mutableStateOf(0.0)
       }
-            val totalbillState = remember {
-                mutableStateOf("0")
-            }
 
-            val validState = remember(totalbillState.value) {
-                totalbillState.value.trim().isNotEmpty()
-            }
-            val keyBoardController = LocalSoftwareKeyboardController.current
 
 MyApp {
     generateBox(
@@ -70,21 +64,11 @@ MyApp {
         borderWidth = 3,
         borderColor = Color.Black,
         shape = RectangleShape) {
-        generateInputField(
-            mainString = totalbillState,
-            isEnabled =true ,
-            padding =10 ,
-            isSingleLine =true ,
-            isReadOnly =false ,
-            context = mContext,
-            onAction = KeyboardActions{
-            if (!validState)return@KeyboardActions
-                keyBoardController?.hide()
+        billForm(){billAmt->
+            Log.d("amt", "onCreate: ${billAmt.toInt()*100} ")
 
-            }
-        ) {
-            Text(text = "box")
         }
+
     }
 }
         }
@@ -148,6 +132,37 @@ fun generateText(
     fontSize : TextUnit
 ){
     Text(text = content , fontWeight =fontWeight, color =color,fontSize = fontSize)
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun billForm(modifier: Modifier=Modifier,onValChange : (String) -> Unit = {}){
+    val mContext = LocalContext.current
+    val totalbillState = remember {
+        mutableStateOf("0")
+    }
+
+    val validState = remember(totalbillState.value) {
+        totalbillState.value.trim().isNotEmpty()
+    }
+    val keyBoardController = LocalSoftwareKeyboardController.current
+    generateInputField(
+        mainString = totalbillState,
+        isEnabled =true ,
+        padding =10 ,
+        isSingleLine =true ,
+        isReadOnly =false ,
+        context = mContext,
+        onAction = KeyboardActions{
+            if (!validState)return@KeyboardActions
+           onValChange(totalbillState.value.trim())
+            keyBoardController?.hide()
+
+        }
+    ) {
+        Text(text = "box")
+    }
 }
 @Preview(showBackground = true)
 @Composable
