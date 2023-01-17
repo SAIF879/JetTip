@@ -40,16 +40,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            val mcontext = LocalContext.current
       val amount by remember {
-          mutableStateOf(0.0)
+          mutableStateOf(0F)
       }
 
             var people by remember {
                 mutableStateOf(1)
             }
 
-            val mcontext = LocalContext.current
+            var sliderPositionState by remember {
+                mutableStateOf(0F)
+            }
+
 
 MyApp {
     generateBox(
@@ -76,7 +79,7 @@ MyApp {
         billForm(){billAmt->
             Log.d("amt", "onCreate: ${billAmt.toInt()*100} ")
         }
-        generateBox(size = 70, padding =30 , elevation =5 ) {
+        generateContainer(size = 70, padding =30 , elevation =5 ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -108,6 +111,22 @@ MyApp {
 
             }
         }
+        generateContainer(size = 30, padding = 10, elevation =5 ) {
+            Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "TIP")
+                Spacer(modifier = Modifier.width(30.dp))
+                Text(text = "$ tipValue")
+            }
+        }
+        generateContainer(size = 70, padding =10 , elevation =5 ) {
+            Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally ) {
+                Text(text = "$sliderPositionState")
+                Slider(value = sliderPositionState, onValueChange ={newVal ->
+                    sliderPositionState = newVal
+                    Log.d("slider", "onCreate: $sliderPositionState")
+                } )
+            }
+        }
 
     }
 }
@@ -136,12 +155,12 @@ fun MyApp(content : @Composable () -> Unit){
 
 @Composable
 fun generateBox(color: Color,
-                height : Int,
-                padding : Int,
-                borderWidth : Int,
-                borderColor : Color,
-                shape: Shape,
-                content: @Composable () -> Unit,
+                 height : Int,
+                 padding : Int,
+                 borderWidth : Int,
+                 borderColor : Color,
+                 shape: Shape,
+                 content: @Composable () -> Unit,
 ){
     Card(
         modifier = Modifier
@@ -165,7 +184,7 @@ fun generateBox(color: Color,
 }
 
 @Composable
-fun generateBox(
+fun generateContainer(
     size : Int,
     padding : Int,
     elevation : Int,
@@ -223,6 +242,8 @@ fun billForm(modifier: Modifier=Modifier,onValChange : (String) -> Unit = {}){
         Text(text = "box")
     }
 }
+
+
 
 
 @Preview(showBackground = true)
