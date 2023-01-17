@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val mcontext = LocalContext.current
-      val amount by remember {
+      var amount by remember {
           mutableStateOf(0F)
       }
 
@@ -76,6 +77,9 @@ MyApp {
 
         generateText(content = "Total Per Person", fontWeight = FontWeight.SemiBold, color = Color.Black, fontSize =25.sp )
         generateText(content ="₹ $amount" , fontWeight =FontWeight.ExtraBold , color =Color.Black , fontSize =50.sp )
+
+
+
     }
 
    Spacer(modifier = Modifier.height(10.dp))
@@ -104,7 +108,8 @@ MyApp {
                     border = 0,
                     imageVector =Icons.Default.Remove ,
                 ){
-                    people-=1
+                  if(people<2){people=1}
+                    else {people-=1}
                 }
 //                generateText(content = "$people", fontWeight =FontWeight.SemiBold , color =Color.Black , fontSize =10.sp ,)
                 Text(
@@ -128,11 +133,12 @@ MyApp {
 
             }
         }
-        generateContainer(size = 30, padding = 10, elevation =5 ) {
+        generateContainer(size = 30, padding = 29, elevation =5 ) {
             Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "TIP")
+                Text(text = "TIP  -->", fontSize = 25.sp, fontWeight = FontWeight.Bold, color=Color.Red
+                )
                 Spacer(modifier = Modifier.width(30.dp))
-                Text(text = "${tipAmountstate}")
+                Text(text = "$ ${tipAmountstate}", fontSize = 25.sp,fontWeight = FontWeight.SemiBold)
             }
         }
         generateContainer(size = 70, padding =10 , elevation =5 ) {
@@ -142,6 +148,7 @@ MyApp {
                     sliderPositionState = newVal
 //                    tipAmountstate.value = calculate()
                     tipAmountstate = calculateTip(totalbillState.value.toDouble(),tipPercentage)
+                    amount = CalculateTotalPerPerson(totalbillState.value.toDouble(), tipPercentage , people)
                     Log.d("tip", "onCreate: ${tipAmountstate}")
                     Log.d("slider", "onCreate: $sliderPositionState")
                 },
@@ -268,6 +275,10 @@ fun calculateTip(totalBill : Double , tipPercentage : Int) : Double{
         else 0.0
 }
 
+fun CalculateTotalPerPerson(totalAmount : Double , tipPercentage: Int , people : Int) : Float{
+    val bill = (calculateTip(totalAmount,tipPercentage) + totalAmount) / people
+    return bill.toFloat()
+}
 
 
 @Preview(showBackground = true)
