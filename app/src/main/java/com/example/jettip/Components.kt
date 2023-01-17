@@ -97,7 +97,9 @@ fun generateCircleButton(
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
         ) {
-           Icon(imageVector =imageVector , contentDescription ="button_icon(s)", tint = Color.Black )
+           Icon(imageVector =imageVector , contentDescription ="button_icon(s)", tint = Color.Black,
+           modifier = Modifier.size(50.dp)
+               )
 
     }
 }

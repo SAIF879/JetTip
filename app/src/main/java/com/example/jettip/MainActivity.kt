@@ -11,6 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Minimize
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Minimize
 import androidx.compose.runtime.Composable
@@ -25,6 +28,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -52,8 +56,13 @@ class MainActivity : ComponentActivity() {
             var sliderPositionState by remember {
                 mutableStateOf(0F)
             }
-            val tipPercentage =sliderPositionState.toInt()*100
-
+            var tipAmountstate by remember {
+                mutableStateOf(0.0)
+            }
+            val totalbillState = remember {
+                mutableStateOf("0")
+            }
+ val tipPercentage = (sliderPositionState *100).toInt()
 
 MyApp {
     generateBox(
@@ -77,7 +86,7 @@ MyApp {
         borderWidth = 3,
         borderColor = Color.Black,
         shape = RectangleShape) {
-        billForm(){billAmt->
+        billForm(Modifier,totalbillState){billAmt->
             Log.d("amt", "onCreate: ${billAmt.toInt()*100} ")
         }
         generateContainer(size = 70, padding =30 , elevation =5 ) {
@@ -91,20 +100,27 @@ MyApp {
                     context = mcontext ,
                     people = people,
                     size = 50,
-                    padding = 5,
+                    padding = 0,
                     border = 0,
-                    imageVector =Icons.Rounded.Minimize ,
+                    imageVector =Icons.Default.Remove ,
                 ){
                     people-=1
                 }
-                generateText(content = "$people", fontWeight =FontWeight.SemiBold , color =Color.Black , fontSize =10.sp )
+//                generateText(content = "$people", fontWeight =FontWeight.SemiBold , color =Color.Black , fontSize =10.sp ,)
+                Text(
+                    text = "$people",
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black,
+                    fontSize = 30.sp,
+                    modifier = Modifier.padding(10.dp)
+                )
                 generateCircleButton(
                     context = mcontext,
                     people =people ,
                     size = 50,
-                    padding = 5,
+                    padding = 0,
                     border = 0,
-                    imageVector =Icons.Rounded.Add,
+                    imageVector =Icons.Default.Add,
                 ){
                     people+=1
                 }
@@ -116,14 +132,17 @@ MyApp {
             Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "TIP")
                 Spacer(modifier = Modifier.width(30.dp))
-                Text(text = "$ tipValue")
+                Text(text = "${tipAmountstate}")
             }
         }
         generateContainer(size = 70, padding =10 , elevation =5 ) {
             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally ) {
-                Text(text = "${(sliderPositionState *100).toInt()} %")
+                Text(text = "$tipPercentage %")
                 Slider(value = sliderPositionState, onValueChange ={newVal ->
                     sliderPositionState = newVal
+//                    tipAmountstate.value = calculate()
+                    tipAmountstate = calculateTip(totalbillState.value.toDouble(),tipPercentage)
+                    Log.d("tip", "onCreate: ${tipAmountstate}")
                     Log.d("slider", "onCreate: $sliderPositionState")
                 },
                 steps = 5
@@ -218,13 +237,10 @@ fun generateText(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun billForm(modifier: Modifier=Modifier,onValChange : (String) -> Unit = {}){
+fun billForm(modifier: Modifier=Modifier, totalbillState : MutableState<String>, onValChange : (String) -> Unit = {}){
     val mContext = LocalContext.current
-    val totalbillState = remember {
-        mutableStateOf("0")
-    }
 
-    val validState = remember(totalbillState.value) {
+    val validState = remember(totalbillState) {
         totalbillState.value.trim().isNotEmpty()
     }
     val keyBoardController = LocalSoftwareKeyboardController.current
@@ -246,6 +262,11 @@ fun billForm(modifier: Modifier=Modifier,onValChange : (String) -> Unit = {}){
     }
 }
 
+fun calculateTip(totalBill : Double , tipPercentage : Int) : Double{
+   return if (totalBill>1 && totalBill.toString().isNotEmpty())
+       (totalBill * tipPercentage) / 100
+        else 0.0
+}
 
 
 
