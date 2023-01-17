@@ -52,6 +52,7 @@ class MainActivity : ComponentActivity() {
             var sliderPositionState by remember {
                 mutableStateOf(0F)
             }
+            val tipPercentage =sliderPositionState.toInt()*100
 
 
 MyApp {
@@ -120,11 +121,13 @@ MyApp {
         }
         generateContainer(size = 70, padding =10 , elevation =5 ) {
             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally ) {
-                Text(text = "$sliderPositionState")
+                Text(text = "${(sliderPositionState *100).toInt()} %")
                 Slider(value = sliderPositionState, onValueChange ={newVal ->
                     sliderPositionState = newVal
                     Log.d("slider", "onCreate: $sliderPositionState")
-                } )
+                },
+                steps = 5
+                    )
             }
         }
 
