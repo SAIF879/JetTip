@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -81,12 +82,12 @@ fun generateCircleButton(
             .padding(padding.dp),
         enabled = true,
         border = BorderStroke(border.dp , Color.Black),
-
         elevation = ButtonDefaults.elevation(
             defaultElevation = 15.dp,
             pressedElevation =20.dp ,
             disabledElevation =0.dp,
         ),
+        shape = CircleShape,
         onClick = {
                   Toast.makeText(context,"u clicked on button : )", Toast.LENGTH_SHORT).show()
                   updatePeopleCounter(people)
@@ -94,6 +95,7 @@ fun generateCircleButton(
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
         ) {
-           Icon(imageVector =imageVector , contentDescription ="button_icon(s)" )
+           Icon(imageVector =imageVector , contentDescription ="button_icon(s)", tint = Color.Black )
+
     }
 }

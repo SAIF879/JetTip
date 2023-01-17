@@ -61,7 +61,7 @@ MyApp {
         shape = RoundedCornerShape(10.dp)
     ) {
 
-       generateText(content = "Total Per Person", fontWeight = FontWeight.SemiBold, color = Color.Black, fontSize =25.sp )
+        generateText(content = "Total Per Person", fontWeight = FontWeight.SemiBold, color = Color.Black, fontSize =25.sp )
         generateText(content ="₹ $amount" , fontWeight =FontWeight.ExtraBold , color =Color.Black , fontSize =50.sp )
     }
 
@@ -76,25 +76,18 @@ MyApp {
         billForm(){billAmt->
             Log.d("amt", "onCreate: ${billAmt.toInt()*100} ")
         }
-        generateBox(
-            color = Color.White,
-            height = 100,
-            padding =2 ,
-            borderWidth =0 ,
-            borderColor =Color.Black ,
-            shape = RectangleShape
-        ) {
+        generateBox(size = 70, padding =30 , elevation =5 ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-               generateText(content = "Split", fontWeight =FontWeight.Medium , color =Color.Black , fontSize = 10.sp )
-                Spacer(modifier = Modifier.width(30.dp))
+                generateText(content = "Split", fontWeight =FontWeight.Black , color =Color.Black , fontSize =25.sp )
+                Spacer(modifier = Modifier.width(70.dp))
                 generateCircleButton(
                     context = mcontext ,
                     people = people,
-                    size = 30,
-                    padding = 3,
+                    size = 50,
+                    padding = 5,
                     border = 0,
                     imageVector =Icons.Rounded.Minimize ,
                 ){
@@ -104,8 +97,8 @@ MyApp {
                 generateCircleButton(
                     context = mcontext,
                     people =people ,
-                    size = 30,
-                    padding = 3,
+                    size = 50,
+                    padding = 5,
                     border = 0,
                     imageVector =Icons.Rounded.Add,
                 ){
@@ -164,8 +157,27 @@ fun generateBox(color: Color,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
+            content()
+        }
+
+    }
+}
+
+@Composable
+fun generateBox(
+    size : Int,
+    padding : Int,
+    elevation : Int,
+    content: @Composable () -> Unit
+){
+    Box(
+        modifier = Modifier
+            .padding(padding.dp)
+            .height(size.dp)
+            .fillMaxWidth(),
+    ) {
+        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
             content()
         }
 
@@ -211,6 +223,7 @@ fun billForm(modifier: Modifier=Modifier,onValChange : (String) -> Unit = {}){
         Text(text = "box")
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
